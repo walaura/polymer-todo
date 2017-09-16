@@ -1,0 +1,57 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>my-view1</title>
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../bower_components/web-component-tester/browser.js"></script>
+
+    <!-- Import the element to test -->
+    <link rel="import" href="../src/my-todos.html">
+  </head>
+  <body>
+    <test-fixture id="TodosView">
+      <template>
+        <my-todos></my-todos>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('my-todos tests', function() {
+          test('Adding a todo should add it', function() {
+              const myView = fixture('TodosView');
+              myView.addTodo('test');
+              assert.equal(myView.todos.pop().name, 'test');
+          });
+          test('Removing a todo should remove it', function() {
+              const myView = fixture('TodosView');
+
+              const originalLength = myView.todos.length;
+              myView.addTodo('test');
+              myView.removeTodo(myView.todos[myView.todos.length-1].uuid);
+              assert.equal(originalLength, myView.todos.length);
+
+          });
+          test('Doing a todo should do it', function() {
+              const myView = fixture('TodosView');
+              myView.addTodo('test');
+              myView.doTodo(myView.todos[myView.todos.length-1].uuid);
+              assert.equal(myView.todos[myView.todos.length-1].done, true);
+          });
+      });
+    </script>
+  </body>
+</html>

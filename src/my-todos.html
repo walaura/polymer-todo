@@ -63,16 +63,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           return 'my-todos';
       }
       onClickRemoveTodo(ev) {
-          this.todos = this.todos.filter(todo => todo.uuid !== ev.model.item.uuid);
-          this.notifyPath('this.todos');
+          this.removeTodo(ev.model.item.uuid)
       }
       onClickDoTodo(ev) {
-          let index = this.todos.findIndex(todo => todo.uuid === ev.model.item.uuid);
-          this.set(`todos.${index}.done`,!this.todos[index].done);
+          this.doTodo(ev.model.item.uuid)
       }
       onClickAddTodo() {
           let todoName = window.prompt('name');
           this.addTodo(todoName);
+      }
+      removeTodo(uuid) {
+          this.todos = this.todos.filter(todo => todo.uuid !== uuid);
+          this.notifyPath('this.todos');
+      }
+      doTodo(uuid) {
+          let index = this.todos.findIndex(todo => todo.uuid === uuid);
+          debugger;
+          this.set(`todos.${index}.done`,!this.todos[index].done);
       }
       addTodo(name) {
           this.push('todos',{
