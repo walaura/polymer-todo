@@ -23,6 +23,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div class="card">
       <div class="circle">3</div>
       <h1>Todoooos</h1>
+      <button on-click='onClickAddTodo'>+</button>
     </div>
 
     <template is="dom-repeat" items="{{todos}}">
@@ -33,7 +34,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <script>
     class MyTodos extends Polymer.Element {
-      static get is() { return 'my-todos'; }
+      static get is() {
+          return 'my-todos';
+      }
+      onClickAddTodo() {
+          let todoName = window.prompt('name');
+          this.addTodo(todoName);
+      }
+      addTodo(name) {
+          this.push('todos',{
+             name: name
+          });
+      }
       ready() {
           super.ready();
           console.log('lol');
