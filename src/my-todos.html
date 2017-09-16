@@ -8,6 +8,8 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
+<script src="../bower_components/uuid-js/lib/uuid.js"></script>
+
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="shared-styles.html">
 
@@ -22,20 +24,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <div class="card">
       <div class="circle">3</div>
-      <h1>Todoooos</h1>
+      <h1>Todo List</h1>
       <button on-click='onClickAddTodo'>+</button>
     </div>
 
     <template is="dom-repeat" items="{{todos}}">
-        <div class="card">🤷‍ <span>{{item.name}}</span></div>
+        <div class="card">
+            <span on-click='onClickRemoveTodo'>❌</span>
+            🤷‍ <span>{{item.name}}</span>
+        </div>
     </template>
 
   </template>
 
   <script>
+
     class MyTodos extends Polymer.Element {
       static get is() {
           return 'my-todos';
+      }
+      onClickRemoveTodo(ev) {
+          this.todos = this.todos.filter(todo => todo.uuid !== ev.model.item.uuid);
+          this.notifyPath('this.todos');
       }
       onClickAddTodo() {
           let todoName = window.prompt('name');
@@ -43,18 +53,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       addTodo(name) {
           this.push('todos',{
-             name: name
+             name: name,
+             uuid: UUIDjs.create().toString(),
           });
       }
       ready() {
           super.ready();
-          console.log('lol');
           this.todos = [
               {
-                  name: 'Pick up milk'
+                  name: 'Pick up milk',
+                  uuid: UUIDjs.create().toString(),
               },
               {
-                  name: 'Carry cheese'
+                  name: 'Carry cheese',
+                  uuid: UUIDjs.create().toString(),
               }
           ];
       }
