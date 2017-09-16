@@ -20,20 +20,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         display: block;
         padding: 10px;
       }
+      .card[data-is-done] {
+          opacity: .5;
+      }
+      .card {
+          padding: 0;
+          display: flex;
+      }
+      .card > * {
+          padding: 1em;
+      }
+      .card div {
+          flex: 1 1 100%;
+      }
+      paper-fab {
+          position: fixed;
+          bottom: 1em;
+          right: 1em;
+      }
     </style>
 
-    <div class="card">
-      <div class="circle">3</div>
-      <h1>Todo List</h1>
-      <button on-click='onClickAddTodo'>+</button>
-    </div>
-
     <template is="dom-repeat" items="{{todos}}">
-        <div class="card">
+        <div class="card" data-is-done$="[[item.done]]">
+            <div on-click='onClickDoTodo'>{{item.name}}</div>
             <span on-click='onClickRemoveTodo'>❌</span>
-            🤷‍ <span>{{item.name}}</span>
         </div>
     </template>
+
+    <paper-fab icon="add" on-click='onClickAddTodo'></paper-fab>
 
   </template>
 
@@ -47,6 +61,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.todos = this.todos.filter(todo => todo.uuid !== ev.model.item.uuid);
           this.notifyPath('this.todos');
       }
+      onClickDoTodo(ev) {
+          let index = this.todos.findIndex(todo => todo.uuid === ev.model.item.uuid);
+          this.set(`todos.${index}.done`,!this.todos[index].done);
+      }
       onClickAddTodo() {
           let todoName = window.prompt('name');
           this.addTodo(todoName);
@@ -54,21 +72,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       addTodo(name) {
           this.push('todos',{
              name: name,
+             done: false,
              uuid: UUIDjs.create().toString(),
           });
       }
       ready() {
           super.ready();
-          this.todos = [
-              {
-                  name: 'Pick up milk',
-                  uuid: UUIDjs.create().toString(),
-              },
-              {
-                  name: 'Carry cheese',
-                  uuid: UUIDjs.create().toString(),
-              }
-          ];
+          this.todos = [];
+          this.addTodo('Milk');
+          this.addTodo('Cheese');
       }
     }
 
